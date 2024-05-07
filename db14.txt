@@ -1,0 +1,33 @@
+14. Create Table with primary key and foreign key constraints. 
+ Alter table with add n modify 
+ Drop table
+
+
+->>>>
+
+
+CREATE TABLE departments (
+    department_id INT PRIMARY KEY,
+    department_name VARCHAR(100)
+);
+
+
+
+CREATE TABLE employees (
+    employee_id INT PRIMARY KEY,
+    name VARCHAR(100),
+    department_id INT,
+    FOREIGN KEY (department_id) REFERENCES departments(department_id)
+);
+
+
+-- Add a new column
+ALTER TABLE employees
+ADD COLUMN email VARCHAR(100);
+
+-- Modify an existing column
+ALTER TABLE employees
+MODIFY COLUMN name VARCHAR(150);
+
+
+DROP TABLE employees;

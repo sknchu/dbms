@@ -1,0 +1,73 @@
+4. Implement nested sub queries. Perform a test for set membership (in, not in), set comparison 
+(<some, >=some, <all etc.) and set cardinality (unique, not unique).
+Consider following Employee table: 
+ +----+----------+-----+-----------+---------------------+ 
+ | ID | NAME | AGE | ADDRESS | SALARY | 
+ +----+----------+-----+-----------+----------------------+ 
+i. Consider a table Employee_BKP with similar structure as Employee table. copy complete 
+Employee table into Employee_BKP.
+ii. update SALARY by 0.25 times in Employee table for all the Employees whose AGE is 
+greater than or equal to 27.
+iii. delete records from Employee table for all the Employees whose AGE is greater than or equal 
+to 27.
+
+
+->
+
+-- Create the Employee table
+CREATE TABLE Employee (
+    ID INT PRIMARY KEY,
+    FIRST_NAME VARCHAR(255),
+    LAST_NAME VARCHAR(255),
+    AGE INT,
+    ADDRESS VARCHAR(255),
+    SALARY DECIMAL(10, 2)
+);
+
+-- Insert records into the Employee table
+INSERT INTO Employee (ID, FIRST_NAME, LAST_NAME, AGE, ADDRESS, SALARY) VALUES
+(1, 'Karan', 'Rajput', 25, '123 Street, City', 55000.00),
+(2, 'Rohit', 'Musale', 30, '456 Avenue, Town', 60000.00),
+(3, 'Onkar', 'Warade', 35, '789 Road, Village', 65000.00),
+(4, 'Pratiksha', 'Patil', 25, '789 Road, Village', 50000.00);
+
+-----------------------------------------------------------------------------------------------------------------------------------------------
+
+-- Set membership (IN, NOT IN)
+SELECT *
+FROM Employee
+WHERE AGE IN (25, 30, 35); -- Selects employees with age 25, 30, or 35
+
+SELECT *
+FROM Employee
+WHERE AGE NOT IN (25, 30, 35); -- Selects employees with age other than 25, 30, or 35
+
+-- Set comparison (<SOME, >=SOME, <ALL, etc.)
+SELECT *
+FROM Employee
+WHERE AGE < SOME (SELECT AGE FROM Employee WHERE SALARY > 50000); -- Selects employees whose age is less than some age where the salary is greater than 50000
+
+SELECT *
+FROM Employee
+WHERE AGE >= ALL (SELECT AGE FROM Employee WHERE SALARY > 50000); -- Selects employees whose age is greater than or equal to all ages where the salary is greater than 50000
+
+-- Set cardinality (UNIQUE, NOT UNIQUE)
+SELECT DISTINCT AGE
+FROM Employee; -- Selects unique ages from the Employee table
+
+SELECT AGE, COUNT(*)
+FROM Employee
+GROUP BY AGE
+HAVING COUNT(*) > 1; -- Selects ages from the Employee table with counts greater than 1, indicating non-unique ages
+
+
+
+-- i. Copy complete Employee table into Employee_BKP
+CREATE TABLE Employee_BKP LIKE Employee; -- Create Employee_BKP with the same structure as Employee
+INSERT INTO Employee_BKP SELECT * FROM Employee; -- Copy data from Employee to Employee_BKP
+
+-- ii. Update SALARY by 0.25 times in Employee table for all the Employees whose AGE is greater than or equal to 27
+UPDATE Employee SET SALARY = SALARY * 1.25 WHERE AGE >= 27;
+
+-- iii. Delete records from Employee table for all the Employees whose AGE is greater than or equal to 27
+DELETE FROM Employee WHERE AGE >= 27;

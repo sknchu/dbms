@@ -1,0 +1,121 @@
+17. Perform following SQL queries on the database 
+ Processing Date and Time functions 
+ Group functions
+
+->>>
+
+
+CREATE TABLE orders (
+    order_id INT PRIMARY KEY,
+    customer_id INT,
+    order_date DATE,
+    total_amount DECIMAL(10, 2)
+);
+
+INSERT INTO orders (order_id, customer_id, order_date, total_amount) 
+VALUES 
+    (1, 101, '2024-05-01', 50.00),
+    (2, 102, '2024-05-02', 75.50),
+    (3, 103, '2024-05-03', 120.25),
+    (4, 104, '2024-05-04', 90.80),
+    (5, 105, '2024-05-05', 200.00);
+
+
+CREATE TABLE customers (
+    customer_id INT PRIMARY KEY,
+    name VARCHAR(100),
+    email VARCHAR(100)
+);
+
+
+INSERT INTO customers (customer_id, name, email)
+VALUES 
+    (101, 'John Doe', 'john@example.com'),
+    (102, 'Jane Smith', 'jane@example.com'),
+    (103, 'Michael Johnson', 'michael@example.com'),
+    (104, 'Emily Brown', 'emily@example.com'),
+    (105, 'David Wilson', 'david@example.com');
+
+
+
+
+
+
+1. **Processing Date and Time Functions:**
+
+   - Retrieve the current date:
+     ```sql
+
+     SELECT CURRENT_DATE;
+     
+
+   - Retrieve the current time:
+     ```sql
+
+     SELECT CURRENT_TIME;
+     
+
+   - Retrieve the current date and time:
+     ```sql
+
+     SELECT CURRENT_TIMESTAMP;
+     
+
+   - Retrieve the day of the week for a given date:
+     ```sql
+
+     SELECT DAYOFWEEK('2024-05-07');
+     
+
+   - Retrieve the month for a given date:
+     ```sql
+
+     SELECT MONTH('2024-05-07');
+   
+   - Retrieve the year for a given date:
+     ```sql
+
+     SELECT YEAR('2024-05-07');
+     
+
+2. **Group Functions:**
+
+   Consider a table named `orders` with columns `order_id`, `customer_id`, `order_date`, and `total_amount`.
+
+   - Calculate the total number of orders:
+     ```sql
+
+     SELECT COUNT(order_id) AS total_orders FROM orders;
+     
+
+   - Calculate the total amount of orders:
+     ```sql
+
+     SELECT SUM(total_amount) AS total_amount FROM orders;
+    
+
+   - Calculate the average order amount:
+     ```sql
+
+     SELECT AVG(total_amount) AS average_amount FROM orders;
+    
+
+   - Find the maximum order amount:
+     ```sql
+
+     SELECT MAX(total_amount) AS max_amount FROM orders;
+    
+   - Find the minimum order amount:
+     ```sql
+
+     SELECT MIN(total_amount) AS min_amount FROM orders;
+     
+
+   - Group orders by year and calculate the total amount for each year:
+     ```sql
+
+     SELECT YEAR(order_date) AS order_year, SUM(total_amount) AS total_amount
+     FROM orders
+     GROUP BY YEAR(order_date);
+     
+

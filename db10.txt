@@ -1,0 +1,80 @@
+10. Design Library Management database with at least 3 entities and relationships between them. 
+Apply DDL commands. Draw suitable ER/EER diagram for the system. (Insert minimum 3 
+records in each table)
+
+->
+
+-- Create Authors table
+CREATE TABLE Authors (
+    author_id INT PRIMARY KEY,
+    author_name VARCHAR(100)
+);
+
+-- Create Books table
+CREATE TABLE Books (
+    book_id INT PRIMARY KEY,
+    title VARCHAR(200),
+    author_id INT,
+    FOREIGN KEY (author_id) REFERENCES Authors(author_id)
+);
+
+-- Create Members table
+CREATE TABLE Members (
+    member_id INT PRIMARY KEY,
+    member_name VARCHAR(100)
+);
+
+-- Create Borrowings table
+CREATE TABLE Borrowings (
+    borrowing_id INT PRIMARY KEY,
+    member_id INT,
+    book_id INT,
+    borrow_date DATE,
+    return_date DATE,
+    FOREIGN KEY (member_id) REFERENCES Members(member_id),
+    FOREIGN KEY (book_id) REFERENCES Books(book_id)
+);
+
+
+-- Insert into Authors
+INSERT INTO Authors (author_id, author_name) VALUES
+(1, 'Stephen King'),
+(2, 'J.K. Rowling'),
+(3, 'George Orwell');
+
+-- Insert into Books
+INSERT INTO Books (book_id, title, author_id) VALUES
+(1, '1984', 3),
+(2, 'Harry Potter and the Philosopher''s Stone', 2),
+(3, 'The Shining', 1);
+
+-- Insert into Members
+INSERT INTO Members (member_id, member_name) VALUES
+(1, 'John Doe'),
+(2, 'Jane Smith'),
+(3, 'Alice Johnson');
+
+-- Insert into Borrowings
+INSERT INTO Borrowings (borrowing_id, member_id, book_id, borrow_date, return_date) VALUES
+(1, 1, 1, '2024-04-01', '2024-04-15'),
+(2, 2, 2, '2024-04-05', '2024-04-20'),
+(3, 3, 3, '2024-04-10', NULL);
+
+
+DDL COMMAND :-
+
+ALTER TABLE Books
+ADD COLUMN genre VARCHAR(50);
+
+RENAME TABLE Borrowings TO Transactions;
+
+ALTER TABLE Transactions
+DROP FOREIGN KEY transactions_ibfk_1;
+
+TRUNCATE TABLE Members;
+
+
+ALTER TABLE Books
+DROP FOREIGN KEY books_ibfk_1;
+
+DROP TABLE Authors;

@@ -1,0 +1,46 @@
+19. Write and execute PL/SQL stored procedure and function to perform a suitable task 
+on the database. Demonstrate its use.
+
+
+->>>
+
+
+CREATE TABLE IF NOT EXISTS employees (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100),
+    salary DECIMAL(10, 2)
+);
+
+
+INSERT INTO employees (name, salary) VALUES
+('John Doe', 5000.00),
+('Jane Smith', 6000.00),
+('Michael Johnson', 5500.00);
+
+
+DELIMITER //
+CREATE PROCEDURE GetEmployee(IN employee_id INT)
+BEGIN
+    SELECT * FROM employees WHERE id = employee_id;
+END //
+DELIMITER ;
+
+
+
+CALL GetEmployee(2);
+
+
+
+DELIMITER //
+CREATE FUNCTION CalculateSalary(salary DECIMAL(10, 2), bonus DECIMAL(10, 2)) RETURNS DECIMAL(10, 2)
+DETERMINISTIC
+BEGIN
+    DECLARE total_salary DECIMAL(10, 2);
+    SET total_salary = salary + bonus;
+    RETURN total_salary;
+END;
+//
+DELIMITER ;
+
+
+SELECT CalculateSalary(5000.00, 1000.00);

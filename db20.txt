@@ -1,0 +1,164 @@
+20.Design and implement a database using DDL statements and apply normalization on 
+them
+
+
+->>>>>
+
+
+
+1. CREATING TABLE 
+
+CREATE TABLE Authors (
+    author_id INT AUTO_INCREMENT PRIMARY KEY,
+    author_name VARCHAR(100),
+    -- Other author attributes
+);
+
+CREATE TABLE Publishers (
+    publisher_id INT AUTO_INCREMENT PRIMARY KEY,
+    publisher_name VARCHAR(100),
+    -- Other publisher attributes
+);
+
+CREATE TABLE Books (
+    book_id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(255),
+    author_id INT,
+    publisher_id INT,
+    -- Other book attributes
+    FOREIGN KEY (author_id) REFERENCES Authors(author_id),
+    FOREIGN KEY (publisher_id) REFERENCES Publishers(publisher_id)
+);
+
+
+2. APPLY NORMALIZATION 
+
+1. 1NF
+
+-- Authors Table (1NF)
+CREATE TABLE Authors (
+    author_id INT AUTO_INCREMENT PRIMARY KEY,
+    author_name VARCHAR(100)
+);
+
+-- Publishers Table (1NF)
+CREATE TABLE Publishers (
+    publisher_id INT AUTO_INCREMENT PRIMARY KEY,
+    publisher_name VARCHAR(100)
+);
+ 
+-- Books Table (1NF)
+CREATE TABLE Books (
+    book_id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(255),
+    -- Other book attributes
+    author_id INT,
+    publisher_id INT,
+    FOREIGN KEY (author_id) REFERENCES Authors(author_id),
+    FOREIGN KEY (publisher_id) REFERENCES Publishers(publisher_id)
+);
+
+
+
+2. 2NF
+
+-- Authors Table (2NF)
+CREATE TABLE Authors (
+    author_id INT AUTO_INCREMENT PRIMARY KEY,
+    author_name VARCHAR(100)
+    -- Other author attributes, if any
+);
+
+-- Publishers Table (2NF)
+CREATE TABLE Publishers (
+    publisher_id INT AUTO_INCREMENT PRIMARY KEY,
+    publisher_name VARCHAR(100)
+    -- Other publisher attributes, if any
+);
+
+-- Books Table (2NF)
+CREATE TABLE Books (
+    book_id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(255),
+    -- Other book attributes
+);
+
+CREATE TABLE Book_Authors (
+    book_id INT,
+    author_id INT,
+    PRIMARY KEY (book_id, author_id),
+    FOREIGN KEY (book_id) REFERENCES Books(book_id),
+    FOREIGN KEY (author_id) REFERENCES Authors(author_id)
+);
+
+
+
+
+3. 3NF
+
+-- Authors Table (3NF)
+CREATE TABLE Authors (
+    author_id INT AUTO_INCREMENT PRIMARY KEY,
+    author_name VARCHAR(100)
+    -- Other author attributes, if any
+);
+
+-- Publishers Table (3NF)
+CREATE TABLE Publishers (
+    publisher_id INT AUTO_INCREMENT PRIMARY KEY,
+    publisher_name VARCHAR(100)
+    -- Other publisher attributes, if any
+);
+
+-- Books Table (3NF)
+CREATE TABLE Books (
+    book_id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(255),
+    publisher_id INT,
+    FOREIGN KEY (publisher_id) REFERENCES Publishers(publisher_id)
+);
+
+-- No need for Book_Authors table, as authors are not dependent on books for attributes.
+
+
+
+
+
+Explanation 
+
+
+Sure, here's a brief explanation of the normalization process outlined in the previous response:
+
+Normalization is a technique used in database design to organize data efficiently and eliminate redundancy. It involves breaking down large tables into smaller, related tables, thereby reducing data duplication and ensuring data integrity. 
+
+### First Normal Form (1NF)
+In 1NF, we ensure that each column in a table contains atomic values, meaning there are no repeating groups. This is achieved by separating multi-valued attributes into separate tables.
+
+### Second Normal Form (2NF)
+In 2NF, we eliminate partial dependencies, meaning that each non-key column in a table must depend on the entire primary key, not just part of it. This is done by splitting tables and creating relationships between them.
+
+### Third Normal Form (3NF)
+In 3NF, we eliminate transitive dependencies, meaning that non-key columns should not depend on other non-key columns. This is achieved by further breaking down tables and establishing relationships to ensure data is stored without redundancy.
+
+By following these normalization steps, we can design databases that are well-structured, efficient, and maintain data integrity, which is crucial for effective data management and retrieval.
+
+
+
+
+
+
+DDL COMANDS :-
+
+
+-- ALTER TABLE command to add a new column
+ALTER TABLE Books
+ADD COLUMN publication_year INT;
+
+-- RENAME TABLE command to rename a table
+RENAME TABLE Books TO LibraryBooks;
+
+-- TRUNCATE TABLE command to remove all records from a table
+TRUNCATE TABLE LibraryBooks;
+
+-- DROP TABLE command to delete a table
+DROP TABLE LibraryBooks;

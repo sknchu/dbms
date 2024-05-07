@@ -1,0 +1,38 @@
+7. Consider table Student(rollnumber,name,sub1,sub2,sub3). Create function to display total marks 
+of a mentioned student.
+
+->
+
+-- First, let's create the Student table
+CREATE TABLE Student (
+    rollnumber INT PRIMARY KEY,
+    name VARCHAR(100),
+    sub1 INT,
+    sub2 INT,
+    sub3 INT
+);
+
+INSERT INTO Student (rollnumber, name, sub1, sub2, sub3)
+ VALUES
+    (1, 'Karan', 90, 85, 95),
+    (2, 'Rohit', 80, 75, 85),
+    (3, 'Amar', 85, 90, 80);
+
+
+DELIMITER //
+CREATE FUNCTION CalculateTotalMarks(student_name VARCHAR(100))
+RETURNS INT
+READS SQL DATA
+BEGIN
+    DECLARE total_marks INT;
+    
+    SELECT (sub1 + sub2 + sub3) INTO total_marks
+    FROM Student
+    WHERE name = student_name;
+    
+    RETURN total_marks;
+END //
+DELIMITER ;
+
+
+SELECT CalculateTotalMarks('Karan') AS TotalMarks;

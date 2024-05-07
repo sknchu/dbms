@@ -1,0 +1,54 @@
+18. Write a PL/SQL block to implement all types of cursor.
+
+
+->>> 
+
+
+-- Create the employees table
+CREATE TABLE employees (
+    employee_id INT AUTO_INCREMENT PRIMARY KEY,
+    first_name VARCHAR(50),
+    last_name VARCHAR(50),
+    salary DECIMAL(10, 2)
+);
+
+-- Insert some sample data into the employees table
+INSERT INTO employees (first_name, last_name, salary) VALUES
+('Alice', 'Smith', 50000.00),
+('Bob', 'Johnson', 60000.00),
+('Charlie', 'Brown', 55000.00),
+('David', 'Williams', 65000.00);
+
+
+
+
+DELIMITER //
+
+CREATE PROCEDURE cursor_example()
+BEGIN
+    DECLARE v_emp_id INT;
+    DECLARE v_emp_name VARCHAR(100);
+    DECLARE v_salary DECIMAL(10, 2);
+    DECLARE done BOOLEAN DEFAULT FALSE;
+    DECLARE cur_employee CURSOR FOR
+        SELECT employee_id, CONCAT(first_name, ' ', last_name) AS full_name, salary
+        FROM employees;
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
+    OPEN cur_employee;
+    FETCH_LOOP: LOOP
+        FETCH cur_employee INTO v_emp_id, v_emp_name, v_salary;
+        IF done THEN
+            LEAVE FETCH_LOOP;
+        END IF;
+        SELECT CONCAT('Employee ID: ', v_emp_id, ', Name: ', v_emp_name, ', Salary: ', v_salary);
+    END LOOP;
+    CLOSE cur_employee;
+END //
+
+DELIMITER ;
+
+
+
+
+
+CALL cursor_example();

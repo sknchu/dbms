@@ -1,0 +1,33 @@
+6. Consider table Student(rollnumber,name,sub1,sub2,sub3,total). Create procedure to calculate 
+   total marks of all the students. Demonstrate its use.
+
+->
+
+CREATE TABLE Student (
+    rollnumber INT PRIMARY KEY,
+    name VARCHAR(50),
+    sub1 INT,
+    sub2 INT,
+    sub3 INT,
+    total INT
+);
+
+INSERT INTO Student (rollnumber, name, sub1, sub2, sub3)
+VALUES
+(1, 'Karan Rajput', 80, 85, 90),
+(2, 'Rohit Musale', 75, 70, 85),
+(3, 'Pratiksha Patil', 90, 95, 85),
+(4, 'Amar Thange', 85, 80, 75);
+
+DELIMITER //
+
+CREATE PROCEDURE CalculateTotalMarks()
+BEGIN
+    SELECT rollnumber, name, sub1, sub2, sub3, (sub1 + sub2 + sub3) AS total
+    FROM Student;
+END//
+
+DELIMITER ;
+
+
+CALL CalculateTotalMarks();

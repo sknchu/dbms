@@ -1,0 +1,82 @@
+1. Design Student Registration for admission database with at least 3 entities and relationships 
+between them. Apply DCL and DDL commands. Draw suitable ER/EER diagram for the 
+system.
+
+->  
+
+CREATE TABLE Student (
+    student_id INT PRIMARY KEY,
+    student_name VARCHAR(100),
+    student_email VARCHAR(100)
+);
+
+
+CREATE TABLE Course (
+    course_id INT PRIMARY KEY,
+    course_name VARCHAR(100),
+    course_code VARCHAR(20)
+);
+
+
+CREATE TABLE Registration (
+    registration_id INT PRIMARY KEY,
+    student_id INT,
+    course_id INT,
+    registration_date DATE,
+    FOREIGN KEY (student_id) REFERENCES Student(student_id),
+    FOREIGN KEY (course_id) REFERENCES Course(course_id)
+);
+
+
+INSERT INTO Student (student_id, student_name, student_email) VALUES
+(1, 'Karan Rajput', 'karan@example.com'),
+(2, 'Onkar Warade', 'onkar@example.com'),
+(3, 'Pratiksha Patil', 'pratiksha@example.com'),
+(4, 'Amar Thange', 'amar@example.com'),
+(5, 'Rohit Musale', 'rohit@example.com');
+
+
+INSERT INTO Course (course_id, course_name, course_code) VALUES
+(101, 'Database Management Systems', 'DBMS101'),
+(102, 'Computer Networks', 'CN102'),
+(103, 'Data Structures and Algorithms', 'DSA103');
+
+INSERT INTO Registration (registration_id, student_id, course_id, registration_date) VALUES
+(1, 1, 101, '2024-05-01'),
+(2, 2, 102, '2024-05-02'),
+(3, 3, 101, '2024-05-03'),
+(4, 4, 103, '2024-05-04'),
+(5, 5, 102, '2024-05-05');
+
+
+
+DCL commands : -
+
+-- Granting privileges to a user or role
+GRANT SELECT, INSERT, UPDATE, DELETE ON Student TO 'root'@'localhost';
+GRANT SELECT, INSERT, UPDATE, DELETE ON Course TO 'root'@'localhost';
+GRANT SELECT, INSERT, UPDATE, DELETE ON Registration TO 'root'@'localhost';
+
+-- Revoking privileges from a user or role
+REVOKE INSERT ON Student FROM 'root'@'localhost';
+REVOKE UPDATE ON Course FROM 'root'@'localhost';
+REVOKE DELETE ON Registration FROM 'root'@'localhost';
+
+
+DDL Commands :-
+
+ALTER TABLE Student ADD column_name datatype;
+
+ALTER TABLE Student ADD date_of_birth DATE;
+
+DROP TABLE table_name;
+
+DROP TABLE Course;
+
+TRUNCATE TABLE table_name;
+
+TRUNCATE TABLE Registration;
+
+RENAME TABLE current_table_name TO new_table_name;
+
+RENAME TABLE Registration TO Enrollments;

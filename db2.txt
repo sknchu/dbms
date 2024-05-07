@@ -1,0 +1,166 @@
+2. Consider the relational database given below:
+ employee (emp_name,street,city)
+ works(emp_name, company_name,salary)
+ company(company_name, city)
+ manager(emp_name, manager_name)
+Write a query for each of the following :
+1.Find the emp_name , street and cities of residence of employees whose salary exists in between 10000 and 
+20000 and work for ABC Ltd.
+2. Find the name, street and cities of employees who live in the same city as the company they
+work for.
+3. Find all employees in the database who earn more than each employee of Central Bank.
+4. Find the company that has the most employees.
+5. Find the company that has the smallest salary payout.
+6. Find those companies whose employees earn a higher salary, on average, than the average salary at 
+Central Bank.
+7. Find all employees who live in the same city and on the same street as do the manager.
+8. Find the names of employee who do not work for ABC Ltd.
+9. Find all the employees with location of the city starting with ‘P’.
+10. Find all the employees with street name ending with ‘R’.
+
+
+->
+
+
+-- Create tables
+CREATE TABLE employee (
+    emp_name VARCHAR(50),
+    street VARCHAR(50),
+    city VARCHAR(50)
+);
+
+CREATE TABLE works (
+    emp_name VARCHAR(50),
+    company_name VARCHAR(50),
+    salary DECIMAL(10, 2)
+);
+
+CREATE TABLE company (
+    company_name VARCHAR(50),
+    city VARCHAR(50)
+);
+
+CREATE TABLE manager (
+    emp_name VARCHAR(50),
+    manager_name VARCHAR(50)
+);
+
+
+INSERT INTO employee VALUES
+('Karan Rajput', '123 Main St', 'New York'),
+('Onkar Warde', '456 Elm St', 'Los Angeles'),
+('Pratiksha Pation', '789 Oak St', 'Chicago'),
+('Rohit Musale', '101 Pine St', 'Chicago'),
+('Priya Sharma', '234 Maple St', 'New York'),
+('Pankaj Gupta', '345 Park Ave', 'Los Angeles'),
+('Riya Kapoor', '567 River Rd', 'New York'),
+('Rakesh Kumar', '678 Spring St', 'Chicago'),
+('Amit Singh', '456 Pine St', 'Chicago'),
+('Neha Sharma', '789 Elm St', 'Los Angeles'),
+('Vikas Patel', '101 Oak St', 'New York'),
+('Sanjay Gupta', '789 Clover Dr', 'Chicago'),
+('Parul Gupta', '789 Oak St', 'Pineville'); 
+
+
+INSERT INTO works VALUES
+('Karan Rajput', 'ABC Ltd', 15000),
+('Onkar Warde', 'XYZ Corp', 18000),
+('Pratiksha Pation', 'ABC Ltd', 20000),
+('Rohit Musale', 'Central Bank', 25000),
+('Priya Sharma', 'ABC Ltd', 17000),
+('Pankaj Gupta', 'XYZ Corp', 16000),
+('Riya Kapoor', 'ABC Ltd', 19000),
+('Rakesh Kumar', 'XYZ Corp', 21000),
+('Amit Singh', 'ABC Ltd', 22000),
+('Neha Sharma', 'XYZ Corp', 23000),
+('Vikas Patel', 'ABC Ltd', 24000),
+('Sanjay Gupta', 'Central Bank', 25000);
+
+
+INSERT INTO company VALUES
+('ABC Ltd', 'New York'),
+('XYZ Corp', 'Los Angeles'),
+('Central Bank', 'Chicago');
+
+
+INSERT INTO manager VALUES
+('Karan Rajput', 'Manager A'),
+('Onkar Warde', 'Manager B'),
+('Pratiksha Pation', 'Manager C'),
+('Rohit Musale', 'Manager D'),
+('Priya Sharma', 'Manager E');
+
+-- Query 1: Find the emp_name, street, and cities of residence of employees whose salary exists between 10000 and 20000 and work for ABC Ltd.
+SELECT e.emp_name, e.street, e.city
+FROM employee e
+INNER JOIN works w ON e.emp_name = w.emp_name
+WHERE w.company_name = 'ABC Ltd' AND w.salary BETWEEN 10000 AND 20000;
+
+-- Query 2: Find the name, street, and cities of employees who live in the same city as the company they work for.
+SELECT e.emp_name, e.street, e.city
+FROM employee e
+INNER JOIN works w ON e.emp_name = w.emp_name
+INNER JOIN company c ON w.company_name = c.company_name
+WHERE e.city = c.city;
+
+-- Query 3: Find all employees in the database who earn more than each employee of Central Bank.
+SELECT e.emp_name, e.street, e.city
+FROM employee e
+WHERE NOT EXISTS (
+    SELECT *
+    FROM works w1
+    WHERE w1.company_name = 'Central Bank'
+    AND w1.salary >= ALL (
+        SELECT w2.salary
+        FROM works w2
+        WHERE w2.emp_name = e.emp_name
+    )
+);
+
+-- Query 4: Find the company that has the most employees.
+SELECT company_name
+FROM works
+GROUP BY company_name
+ORDER BY COUNT(emp_name) DESC
+LIMIT 1;
+
+-- Query 5: Find the company that has the smallest salary payout.
+SELECT company_name
+FROM works
+GROUP BY company_name
+ORDER BY SUM(salary) ASC
+LIMIT 1;
+
+-- Query 6: Find those companies whose employees earn a higher salary, on average, than the average salary at Central Bank.
+SELECT w.company_name
+FROM works w
+GROUP BY w.company_name
+HAVING AVG(w.salary) > (
+    SELECT AVG(salary)
+    FROM works
+    WHERE company_name = 'Central Bank'
+);
+
+-- Query 7: Find all employees who live in the same city and on the same street as the manager.
+SELECT e.emp_name, e.street, e.city
+FROM employee e
+INNER JOIN manager m ON e.emp_name = m.emp_name;
+
+-- Query 8: Find the names of employees who do not work for ABC Ltd.
+SELECT emp_name
+FROM employee
+WHERE emp_name NOT IN (
+    SELECT emp_name
+    FROM works
+    WHERE company_name = 'ABC Ltd'
+);
+
+-- Query 9: Find all the employees with the location of the city starting with ‘P’.
+SELECT emp_name, street, city
+FROM employee
+WHERE city LIKE 'P%';
+
+-- Query 10: Find all the employees with a street name ending with ‘R’.
+SELECT emp_name, street, city
+FROM employee
+WHERE street LIKE '%R';

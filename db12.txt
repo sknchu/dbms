@@ -1,0 +1,91 @@
+12. Write mysql queries for the following:
+1. List all employees of ‘INVENTORY’ department of ‘PUNE’ location.
+2. Give the names of employees who are working on ‘Blood Bank’ project.
+3. Give the name of managers from ‘MARKETING’ department.
+4. Give all the employees working under status ‘INCOMPLETE’ projects
+5. List all employees of ‘PUNE’ location.
+6. List all dept. with their employee count.
+7. List all dept. with employees working under status ‘COMPLETE’ project.
+8. Count total no. of dept.
+9. Display total no of employee.
+10. List out all the project name and name of employees working on that project
+
+
+->
+
+
+CREATE TABLE employees (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100),
+    department VARCHAR(100),
+    location VARCHAR(100),
+    project VARCHAR(100),
+    project_status VARCHAR(100),
+    role VARCHAR(100)
+);
+
+INSERT INTO employees (name, department, location, project, project_status, role) VALUES
+('Ravi Kumar', 'INVENTORY', 'PUNE', 'Project A', 'COMPLETE', 'Engineer'),
+('Sunita Sharma', 'INVENTORY', 'PUNE', 'Project B', 'INCOMPLETE', 'Manager'),
+('Ajay Patel', 'INVENTORY', 'PUNE', 'Project C', 'INCOMPLETE', 'Engineer'),
+('Priya Singh', 'HR', 'DELHI', 'Blood Bank', 'INCOMPLETE', 'Nurse'),
+('Rahul Gupta', 'MEDICAL', 'MUMBAI', 'Blood Bank', 'COMPLETE', 'Doctor'),
+('Anjali Verma', 'LAB', 'BANGALORE', 'Blood Bank', 'INCOMPLETE', 'Lab Technician'),
+('Sanjay Kapoor', 'MARKETING', 'DELHI', 'Project X', 'COMPLETE', 'Manager'),
+('Aarti Singh', 'MARKETING', 'MUMBAI', 'Project Y', 'INCOMPLETE', 'Manager'),
+('Sandeep Sharma', 'HR', 'DELHI', 'Project Z', 'INCOMPLETE', 'HR Manager'),
+('Meera Gupta', 'FINANCE', 'PUNE', 'Project M', 'INCOMPLETE', 'Accountant'),
+('Amit Shah', 'HR', 'PUNE', 'Project R', 'COMPLETE', 'HR Manager'),
+('Geeta Singh', 'SALES', 'PUNE', 'Project S', 'INCOMPLETE', 'Sales Executive');
+
+
+1. List all employees of ‘INVENTORY’ department of ‘PUNE’ location.
+
+SELECT * FROM employees
+WHERE department = 'INVENTORY' AND location = 'PUNE';
+
+2. Give the names of employees who are working on ‘Blood Bank’ project.
+
+SELECT name FROM employees
+WHERE project = 'Blood Bank';
+
+3. Give the name of managers from ‘MARKETING’ department.
+
+SELECT name FROM employees
+WHERE department = 'MARKETING' AND role = 'Manager';
+
+4. Give all the employees working under status ‘INCOMPLETE’ projects
+
+SELECT * FROM employees
+WHERE project_status = 'INCOMPLETE';
+
+5. List all employees of ‘PUNE’ location.
+
+SELECT * FROM employees
+WHERE location = 'PUNE';
+
+6. List all dept. with their employee count.
+
+SELECT department, COUNT(*) AS employee_count
+FROM employees
+GROUP BY department;
+
+7. List all dept. with employees working under status ‘COMPLETE’ project.
+
+SELECT department FROM employees
+WHERE project_status = 'COMPLETE'
+GROUP BY department;
+
+8. Count total no. of dept.
+
+SELECT COUNT(DISTINCT department) AS total_departments FROM employees;
+
+9. Display total no of employee.
+
+SELECT COUNT(*) AS total_employees FROM employees;
+
+10. List out all the project name and name of employees working on that project
+
+SELECT project, GROUP_CONCAT(name) AS employees_working
+FROM employees
+GROUP BY project;

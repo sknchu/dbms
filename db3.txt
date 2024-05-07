@@ -1,0 +1,108 @@
+3. Execute the aggregate functions like count, sum, avg etc. and date functions like now (), date (), 
+day (), time () etc. on the suitable database. 
+ Consider the following database:
+ dept(dept_no, dname, loc, mgrcode)
+ emp(emp_no, ename, designation,joining_date)
+1. Display current date, current time and timestamp.
+2. Consider following table “Order”-  OrderId: 1
+ProductName: Jarlsberg Cheese
+OrderDate: 2014-11-22 13:23:44.657
+i) display date for orderid = 1
+ii) extract year,month and day for orderid = 1
+iii) execute date_add, date_sub, datediff(), date_format functions.
+
+
+->
+
+
+-- Create tables
+CREATE TABLE dept (
+    dept_no INT PRIMARY KEY,
+    dname VARCHAR(50),
+    loc VARCHAR(50),
+    mgrcode INT
+);
+
+CREATE TABLE emp (
+    emp_no INT PRIMARY KEY,
+    ename VARCHAR(50),
+    designation VARCHAR(50),
+    joining_date DATE
+);
+
+CREATE TABLE Order (
+    OrderId INT PRIMARY KEY,
+    ProductName VARCHAR(100),
+    OrderDate DATETIME
+);
+
+-- Insert data into tables
+INSERT INTO dept (dept_no, dname, loc, mgrcode)
+VALUES
+    (101, 'HR', 'New York', 201),
+    (102, 'IT', 'San Francisco', 202),
+    (103, 'Marketing', 'Los Angeles', 203);
+
+INSERT INTO emp (emp_no, ename, designation, joining_date)
+VALUES
+    (301, 'Karan Rajput', 'Manager', '2020-03-15'),
+    (302, 'Rohit Musale', 'Developer', '2021-05-20'),
+    (303, 'Pratiksha Patil', 'Analyst', '2019-11-10'),
+    (304, 'Onkar Warade', 'Designer', '2022-08-01');
+
+INSERT INTO `Order` (OrderId, ProductName, OrderDate)
+VALUES
+    (1, 'Jarlsberg Cheese', '2014-11-22 13:23:44.657');
+
+-- Aggregate functions on emp table
+SELECT COUNT(*) AS TotalEmployees FROM emp;
+SELECT SUM(YEAR(NOW()) - YEAR(joining_date)) AS TotalExperience FROM emp;
+SELECT AVG(YEAR(NOW()) - YEAR(joining_date)) AS AverageExperience FROM emp;
+SELECT MIN(joining_date) AS EarliestJo
+iningDate FROM emp;
+SELECT MAX(joining_date) AS LatestJoiningDate FROM emp;
+
+-- Date functions
+SELECT CURDATE() AS CurrentDate;
+SELECT CURTIME() AS CurrentTime;
+SELECT NOW() AS CurrentTimestamp;
+SELECT DAY(joining_date) AS JoiningDay FROM emp;
+SELECT MONTH(joining_date) AS JoiningMonth FROM emp;
+SELECT YEAR(joining_date) AS JoiningYear FROM emp;
+
+
+1.  Display current date, current time, and timestamp:
+
+SELECT CURDATE() AS CurrentDate, CURTIME() AS CurrentTime, NOW() AS CurrentTimestamp;
+
+
+2. Display date for OrderId = 1:
+
+SELECT OrderDate FROM `Order` WHERE OrderId = 1;
+
+
+3. Extract year, month, and day for OrderId = 1:
+
+SELECT
+    YEAR(OrderDate) AS OrderYear,
+    MONTH(OrderDate) AS OrderMonth,
+    DAY(OrderDate) AS OrderDay
+FROM `Order`
+WHERE OrderId = 1;
+
+
+4. Execute date_add, date_sub, datediff(), date_format functions:
+
+-- date_add example (adding 3 days to the OrderDate for OrderId = 1)
+SELECT DATE_ADD(OrderDate, INTERVAL 3 DAY) AS NewOrderDate FROM `Order` WHERE OrderId = 1;
+
+-- date_sub example (subtracting 1 month from the OrderDate for OrderId = 1)
+SELECT DATE_SUB(OrderDate, INTERVAL 1 MONTH) AS NewOrderDate FROM `Order` WHERE OrderId = 1;
+
+-- datediff example (calculating the difference between current date and OrderDate for OrderId = 1)
+SELECT DATEDIFF(CURDATE(), OrderDate) AS DaysSinceOrder FROM `Order` WHERE OrderId = 1;
+
+-- date_format example (formatting OrderDate for OrderId = 1)
+SELECT DATE_FORMAT(OrderDate, '%Y-%m-%d') AS FormattedOrderDate FROM `Order` WHERE OrderId = 1;
+
+

@@ -1,0 +1,109 @@
+8. To Write a PL/SQL block(procedure) to update total marks, percent, grade of a student using 
+cursor. Use table Student(rollnumber,name,sub1,sub2,sub3,total,Percent,Grade).
+
+->
+
+
+-- Create a table to store student information
+CREATE TABLE Student (
+    rollnumber INT PRIMARY KEY,
+    name VARCHAR(100),
+    sub1 INT,
+    sub2 INT,
+    sub3 INT,
+    total INT,
+    Percent FLOAT,
+    Grade VARCHAR(2)
+);
+
+-- Insert some sample data into the Student table
+INSERT INTO Student (rollnumber, name, sub1, sub2, sub3, total)
+VALUES
+    (1, 'Rohit', 85, 90, 80, NULL), -- Total and other columns will be updated by the procedure
+    (2, 'Karan', 70, 75, 85, NULL),
+    (3, 'Pratiksha', 80, 85, 90, NULL),
+    (4, 'Onkar', 75, 70, 80, NULL);
+
+-- Commit the transaction
+COMMIT;
+
+
+DELIMITER //
+
+CREATE PROCEDURE update_student_marks()
+BEGIN
+    -- Declare variables
+    DECLARE v_rollnumber INT;
+    DECLARE v_sub1 INT;
+    DECLARE v_sub2 INT;
+    DECLARE v_sub3 INT;
+    DECLARE v_total INT;
+    DECLARE v_percent FLOAT;
+    DECLARE v_grade VARCHAR(2);
+    
+    -- Declare a variable to control the loop
+    DECLARE done INT DEFAULT FALSE;
+    
+    -- Declare cursor
+    DECLARE student_cursor CURSOR FOR
+        SELECT rollnumber, sub1, sub2, sub3, total
+        FROM Student;
+    
+    -- Declare handler for exceptions
+    DECLARE CONTINUE HANDLER FOR NOT FOUND
+        SET done = TRUE;
+    
+    -- Open cursor
+    OPEN student_cursor;
+    
+    -- Start loop to fetch records
+    student_loop: LOOP
+        -- Fetch record into variables
+        FETCH student_cursor INTO v_rollnumber, v_sub1, v_sub2, v_sub3, v_total;
+        
+        -- Check if no more records
+        IF done THEN
+            LEAVE student_loop;
+        END IF;
+        
+        -- Calculate total marks
+        SET v_total = v_sub1 + v_sub2 + v_sub3;
+        
+        -- Calculate percentage
+        SET v_percent = (v_total / 300) * 100;
+        
+        -- Determine grade
+        IF v_percent >= 90 THEN
+            SET v_grade = 'A';
+        ELSEIF v_percent >= 80 THEN
+            SET v_grade = 'B';
+        ELSEIF v_percent >= 70 THEN
+            SET v_grade = 'C';
+        ELSEIF v_percent >= 60 THEN
+            SET v_grade = 'D';
+        ELSE
+            SET v_grade = 'F';
+        END IF;
+        
+        -- Update student record
+        UPDATE Student
+        SET total = v_total,
+            Percent = v_percent,
+            Grade = v_grade
+        WHERE rollnumber = v_rollnumber;
+    END LOOP;
+    
+    -- Close cursor
+    CLOSE student_cursor;
+    
+    -- Commit the changes
+    COMMIT;
+    
+    -- Output success message
+    SELECT 'Student marks, percentage, and grade updated successfully.' AS Message;
+END//
+DELIMITER ;
+
+CALL update_student_marks();
+
+SELECT * FROM Student;

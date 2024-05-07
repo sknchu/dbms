@@ -1,0 +1,82 @@
+15. Perform following SQL queries on the database 
+• Arithmetic operations and built in functions 
+• Group functions
+
+
+->>>>>>>
+
+
+CREATE TABLE sales (
+    id INT PRIMARY KEY,
+    product VARCHAR(100),
+    quantity INT,
+    price DECIMAL(10, 2),
+    date DATE
+);
+
+INSERT INTO sales (id, product, quantity, price, date) VALUES
+    (1, 'Product A', 10, 20.00, '2024-05-01'),
+    (2, 'Product B', 5, 15.50, '2024-05-02'),
+    (3, 'Product A', 8, 22.00, '2024-05-03'),
+    (4, 'Product C', 15, 10.00, '2024-05-04'),
+    (5, 'Product B', 12, 18.75, '2024-05-05');
+
+
+
+
+
+1. **Arithmetic Operations and Built-in Functions:**
+   - Calculate the total revenue:
+   ```sql
+
+   SELECT SUM(quantity * price) AS total_revenue
+   FROM sales;
+  
+
+   - Calculate the average price:
+   ```sql
+
+   SELECT AVG(price) AS average_price
+   FROM sales;
+  
+
+   - Calculate the total quantity of all products:
+   ```sql
+
+   SELECT SUM(quantity) AS total_quantity
+   FROM sales;
+  
+
+   - Find the minimum and maximum prices:
+   ```sql
+   SELECT MIN(price) AS min_price, MAX(price) AS max_price
+   FROM sales;
+   
+
+2. **Group Functions:**
+   - Calculate the total revenue for each product:
+   ```sql
+
+   SELECT product, SUM(quantity * price) AS total_revenue
+   FROM sales
+   GROUP BY product;
+  
+
+   - Find the product with the highest total revenue:
+   ```sql
+
+   SELECT product, SUM(quantity * price) AS total_revenue
+   FROM sales
+   GROUP BY product
+   ORDER BY total_revenue DESC
+   LIMIT 1;
+ 
+
+   - Find the total revenue for each month:
+   ```sql
+
+   SELECT MONTH(date) AS month, SUM(quantity * price) AS total_revenue
+   FROM sales
+   GROUP BY MONTH(date);
+   
+

@@ -1,0 +1,66 @@
+11. Design Online Ticket Booking database with at least 3 entities and relationships between them. 
+Apply DDL commands. Draw suitable ER/EER diagram for the system. (Insert minimum 3 
+records in each table).Consider any booking system, e.g, movie ticket, bus ticket,etc.)
+
+->
+
+-- Create Users table
+CREATE TABLE Users (
+    UserID INT PRIMARY KEY AUTO_INCREMENT,
+    Username VARCHAR(50) NOT NULL,
+    Email VARCHAR(100) NOT NULL,
+    Password VARCHAR(50) NOT NULL
+);
+
+-- Create Movies table
+CREATE TABLE Movies (
+    MovieID INT PRIMARY KEY AUTO_INCREMENT,
+    Title VARCHAR(100) NOT NULL,
+    Genre VARCHAR(50),
+    ReleaseDate DATE
+);
+
+-- Create Bookings table
+CREATE TABLE Bookings (
+    BookingID INT PRIMARY KEY AUTO_INCREMENT,
+    UserID INT,
+    MovieID INT,
+    BookingDate DATE,
+    SeatNumber VARCHAR(10),
+    FOREIGN KEY (UserID) REFERENCES Users(UserID),
+    FOREIGN KEY (MovieID) REFERENCES Movies(MovieID)
+);
+
+-- Insert records into Users
+INSERT INTO Users (Username, Email, Password) VALUES 
+('Rahul', 'rahul@example.com', 'password1'),
+('Priya', 'priya@example.com', 'password2'),
+('Amit', 'amit@example.com', 'password3');
+
+-- Insert records into Movies
+INSERT INTO Movies (Title, Genre, ReleaseDate) VALUES 
+('Red Cloth Man', 'Drama', '2024-05-10'),
+('Funny Film', 'Comedy', '2024-05-15'),
+('Action Jackson', 'Action', '2024-05-20');
+
+-- Insert records into Bookings
+INSERT INTO Bookings (UserID, MovieID, BookingDate, SeatNumber) VALUES 
+(1, 1, '2024-05-05', 'A1'),
+(2, 2, '2024-05-06', 'B3'),
+(3, 3, '2024-05-07', 'C5');
+
+
+-- Change the name of the column in the Bookings table
+ALTER TABLE Bookings CHANGE COLUMN SeatNumber SeatCode VARCHAR(10);
+
+-- Rename the Movies table to Films
+RENAME TABLE Movies TO Films;
+
+-- Truncate Bookings table (Remove all records)
+TRUNCATE TABLE Bookings;
+
+-- Drop foreign key constraint from Bookings table
+ALTER TABLE Bookings DROP FOREIGN KEY bookings_ibfk_1;
+
+-- Now you can drop the Users table
+DROP TABLE Users;

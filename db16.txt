@@ -1,0 +1,106 @@
+16. Perform following SQL queries on the database 
+ Implementation of relational operators in SQL
+ Boolean operators and pattern matching
+
+
+->>>
+
+
+
+CREATE TABLE students (
+    id INT PRIMARY KEY,
+    name VARCHAR(50),
+    age INT,
+    grade CHAR(1)
+);
+
+INSERT INTO students (id, name, age, grade) VALUES
+(1, 'Alice', 18, 'A'),
+(2, 'Bob', 17, 'B'),
+(3, 'Charlie', 16, 'C'),
+(4, 'David', 19, 'B'),
+(5, 'Eva', 18, 'A');
+
+
+
+1. Relational Operators:
+   - `<`: Select students younger than 18 years old.
+   
+   ```sql
+
+   SELECT * FROM students WHERE age < 18;
+   
+
+   - `>`: Select students older than or equal to 18 years old.
+   
+   ```sql
+
+   SELECT * FROM students WHERE age >= 18;
+   
+
+   - `=`: Select students whose grade is 'A'.
+   
+   ```sql
+
+   SELECT * FROM students WHERE grade = 'A';
+  
+
+   - `<=`: Select students whose age is less than or equal to 17.
+   
+   ```sql
+
+   SELECT * FROM students WHERE age <= 17;
+   
+
+   - `>=`: Select students whose grade is 'B' or 'C'.
+   
+   ```sql
+
+   SELECT * FROM students WHERE grade >= 'B';
+   
+
+2. Boolean Operators:
+   - `AND`: Select students who are younger than 18 and have a grade of 'A'.
+   
+   ```sql
+
+   SELECT * FROM students WHERE age < 18 AND grade = 'A';
+  
+
+   - `OR`: Select students who are either younger than 18 or have a grade of 'A'.
+   
+   ```sql
+
+   SELECT * FROM students WHERE age < 18 OR grade = 'A';
+   
+
+
+   - `NOT`: Select students who are not younger than 18.
+   
+   ```sql
+
+   SELECT * FROM students WHERE NOT age < 18;
+   
+
+3. Pattern Matching:
+   - `LIKE`: Select students whose name starts with 'A'.
+   
+   ```sql
+
+   SELECT * FROM students WHERE name LIKE 'A%';
+   
+
+   - `LIKE`: Select students whose name ends with 'a'.
+   
+   ```sql
+
+   SELECT * FROM students WHERE name LIKE '%a';
+  
+
+   - `LIKE`: Select students whose name contains 'b'.
+   
+   ```sql
+
+   SELECT * FROM students WHERE name LIKE '%b%';
+   
+

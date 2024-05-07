@@ -1,0 +1,95 @@
+13. Design Railway Reservation database with at least 3 entities and relationships between them. 
+Apply DDL commands. Draw suitable ER/EER diagram for the system (Insert minimum 3 
+records in each table)
+
+
+->
+
+
+CREATE TABLE Train (
+    Train_ID INT PRIMARY KEY,
+    Train_Name VARCHAR(100),
+    Departure_City VARCHAR(100),
+    Arrival_City VARCHAR(100),
+    Departure_Time TIME,
+    Arrival_Time TIME,
+    Total_Seats INT,
+    Available_Seats INT
+);
+
+CREATE TABLE Passenger (
+    Passenger_ID INT PRIMARY KEY,
+    Name VARCHAR(100),
+    Age INT,
+    Gender CHAR(1),
+    Contact_Info VARCHAR(100)
+);
+
+CREATE TABLE Reservation (
+    Reservation_ID INT PRIMARY KEY,
+    Train_ID INT,
+    Passenger_ID INT,
+    Reservation_Date DATE,
+    Seat_Number INT,
+    FOREIGN KEY (Train_ID) REFERENCES Train(Train_ID),
+    FOREIGN KEY (Passenger_ID) REFERENCES Passenger(Passenger_ID)
+);
+
+
+-- Sample data for Train table
+INSERT INTO Train (Train_ID, Train_Name, Departure_City, Arrival_City, Departure_Time, Arrival_Time, Total_Seats, Available_Seats)
+VALUES (1, 'Express123', 'CityA', 'CityB', '09:00:00', '13:00:00', 100, 100),
+       (2, 'SuperFast456', 'CityB', 'CityC', '14:00:00', '18:00:00', 120, 120),
+       (3, 'MegaSwift789', 'CityA', 'CityC', '08:30:00', '16:30:00', 150, 150);
+
+-- Sample data for Passenger table
+INSERT INTO Passenger (Passenger_ID, Name, Age, Gender, Contact_Info)
+VALUES (1, 'Alice', 25, 'F', 'alice@example.com'),
+       (2, 'Bob', 30, 'M', 'bob@example.com'),
+       (3, 'Charlie', 40, 'M', 'charlie@example.com');
+
+-- Sample data for Reservation table
+INSERT INTO Reservation (Reservation_ID, Train_ID, Passenger_ID, Reservation_Date, Seat_Number)
+VALUES (1, 1, 1, '2024-05-10', 15),
+       (2, 2, 2, '2024-05-12', 25),
+       (3, 3, 3, '2024-05-15', 10);
+
+
+
+DDL COMMAND :-
+
+
+-- Add a new column to the Train table
+ALTER TABLE Train
+ADD COLUMN Ticket_Price DECIMAL(10, 2);
+
+-- Rename a column in the Passenger table
+ALTER TABLE Passenger
+CHANGE COLUMN Contact_Info Contact_Number VARCHAR(20);
+
+-- Add a foreign key constraint to the Reservation table
+ALTER TABLE Reservation
+ADD CONSTRAINT fk_train_id
+FOREIGN KEY (Train_ID) REFERENCES Train(Train_ID);
+
+--------------------------------------------------------------------------
+
+ALTER TABLE Reservation
+DROP FOREIGN KEY fk_train_id;
+
+SET FOREIGN_KEY_CHECKS = 0;
+TRUNCATE TABLE Train;
+SET FOREIGN_KEY_CHECKS = 1;
+
+------------------------------------------------------------------------
+
+-- Rename the Reservation table to Booking
+RENAME TABLE Reservation TO Booking;
+
+---------------------------------------------------------------------
+
+-- Drop the foreign key constraint in the Booking table
+ALTER TABLE Booking DROP FOREIGN KEY booking_ibfk_2;
+
+-- Now you can drop the Passenger table
+DROP TABLE Passenger;

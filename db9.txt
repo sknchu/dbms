@@ -1,0 +1,90 @@
+9. To Execute DDL statements which demonstrate the use of views. Try to update the base table 
+using its corresponding view. Also consider restrictions on updatable views and perform view
+creation from multiple tables. consider following base tables.
+ employee (emp_name,street,city)
+ works(emp_name, company_name,salary)
+ company(company_name, city)
+ manager(emp_name, manager_name)
+
+->
+
+CREATE TABLE employee (
+    emp_name VARCHAR(50),
+    street VARCHAR(100),
+    city VARCHAR(50)
+);
+
+CREATE TABLE works (
+    emp_name VARCHAR(50),
+    company_name VARCHAR(50),
+    salary DECIMAL(10, 2)
+);
+
+CREATE TABLE company (
+    company_name VARCHAR(50),
+    city VARCHAR(50)
+);
+
+CREATE TABLE manager (
+    emp_name VARCHAR(50),
+    manager_name VARCHAR(50)
+);
+
+
+-- Inserting values into the employee table
+INSERT INTO employee (emp_name, street, city) VALUES
+('Ramesh Kumar', '123 Main Street', 'Mumbai'),
+('Sneha Sharma', '456 Park Avenue', 'Delhi'),
+('Priya Patel', '789 Elm Street', 'Bangalore');
+
+-- Inserting values into the works table
+INSERT INTO works (emp_name, company_name, salary) VALUES
+('Ramesh Kumar', 'Tech Solutions', 50000.00),
+('Sneha Sharma', 'Data Innovators', 55000.00),
+('Priya Patel', 'Soft Systems', 48000.00);
+
+-- Inserting values into the company table
+INSERT INTO company (company_name, city) VALUES
+('Tech Solutions', 'Mumbai'),
+('Data Innovators', 'Delhi'),
+('Soft Systems', 'Bangalore');
+
+-- Inserting values into the manager table
+INSERT INTO manager (emp_name, manager_name) VALUES
+('Ramesh Kumar', 'Amit Sharma'),
+('Sneha Sharma', 'Amit Sharma'),
+('Priya Patel', 'Neha Gupta');
+
+
+CREATE VIEW employee_info AS
+SELECT e.emp_name, e.street, e.city, w.company_name, w.salary, c.city AS company_city, m.manager_name
+FROM employee e
+JOIN works w ON e.emp_name = w.emp_name
+JOIN company c ON w.company_name = c.company_name
+LEFT JOIN manager m ON e.emp_name = m.emp_name;
+
+-- Try to update the base table using its corresponding view
+UPDATE employee_info
+SET city = 'New Delhi'
+WHERE emp_name = 'Ramesh Kumar';
+
+Explanation :- As expected, the attempt to update the employee_info view directly resulted in an error, indicating that the target table of the UPDATE is not updatable. This is because employee_info is a view that's based on multiple tables and contains derived columns, making it non-updatable.
+
+
+Certainly! Since you can't update the view directly due to its complexity, you can use a subquery to update the base tables indirectly. Here's an example of how you could achieve this:
+
+UPDATE employee
+SET city = 'New Delhi'
+WHERE emp_name = 'Ramesh Kumar' AND emp_name IN (
+    SELECT emp_name FROM works WHERE company_name IN (
+        SELECT company_name FROM company WHERE city = 'Mumbai'
+    )
+);
+
+
+-- Update the base table directly
+UPDATE employee
+SET city = 'New Delhi'
+WHERE emp_name = 'Ramesh Kumar';
+
+

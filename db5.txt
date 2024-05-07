@@ -1,0 +1,69 @@
+5. Write and execute suitable database triggers. Consider row level and statement level triggers.
+The price of a product changes constantly. It is important to maintain the history of the prices of the 
+products. Create a trigger to update the 'product_price_history' table when the price of the product is 
+updated in the 'product' table. 
+Create the 'product' table and 'product_price_history' table 
+CREATE TABLE product_price_history (product_id number(5), product_name varchar2(32), 
+supplier_name varchar2(32), unit_price number(7,2) );
+CREATE TABLE product (product_id number(5), product_name varchar2(32), 
+supplier_name varchar2(32), unit_price number(7,2) )
+
+
+->
+
+
+-- Create product table
+CREATE TABLE product (
+    product_id INT(5),
+    product_name VARCHAR(32),
+    supplier_name VARCHAR(32),
+    unit_price DECIMAL(7,2)
+);
+
+-- Create product price history table
+CREATE TABLE product_price_history (
+    history_id INT AUTO_INCREMENT PRIMARY KEY,
+    product_id INT(5),
+    product_name VARCHAR(32),
+    supplier_name VARCHAR(32),
+    old_price DECIMAL(7,2),
+    new_price DECIMAL(7,2),
+    change_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Create row-level trigger to update product price history
+DELIMITER //
+CREATE TRIGGER product_price_trigger_row AFTER UPDATE ON product
+FOR EACH ROW
+BEGIN
+    IF OLD.unit_price != NEW.unit_price THEN
+        INSERT INTO product_price_history (product_id, product_name, supplier_name, old_price, new_price)
+        VALUES (OLD.product_id, OLD.product_name, OLD.supplier_name, OLD.unit_price, NEW.unit_price);
+    END IF;
+END;
+//
+
+-- Create statement-level trigger to handle multiple updates
+DELIMITER //
+CREATE TRIGGER product_price_trigger_statement AFTER UPDATE ON product
+FOR EACH ROW
+BEGIN
+    IF OLD.unit_price != NEW.unit_price THEN
+        INSERT INTO product_price_history (product_id, product_name, supplier_name, old_price, new_price)
+        SELECT OLD.product_id, OLD.product_name, OLD.supplier_name, OLD.unit_price, NEW.unit_price;
+    END IF;
+END;
+//
+DELIMITER ;
+
+
+INSERT INTO product (product_id, product_name, supplier_name, unit_price) 
+VALUES (1, 'Product A', 'Supplier X', 10.00),
+       (2, 'Product B', 'Supplier Y', 20.00),
+       (3, 'Product C', 'Supplier Z', 30.00);
+
+
+UPDATE product SET unit_price = 15.00 WHERE product_id = 1;
+UPDATE product SET unit_price = 25.00 WHERE product_id = 2;
+
+SELECT * FROM product_price_history;
